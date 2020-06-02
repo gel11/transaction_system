@@ -1,10 +1,10 @@
 package org.gel.transactionsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -18,7 +18,14 @@ public class Transaction {
     @Id
     private Long transactionId;
 
-    @ManyToOne
+    private Long createdTimestamp;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @PrePersist
+    public void prePersist() {
+        createdTimestamp = Instant.now().getEpochSecond();
+    }
 }

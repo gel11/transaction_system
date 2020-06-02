@@ -2,6 +2,7 @@ package org.gel.transactionsystem.controller;
 
 import org.gel.transactionsystem.model.Transaction;
 import org.gel.transactionsystem.model.User;
+import org.gel.transactionsystem.requests.CreditRequest;
 import org.gel.transactionsystem.requests.WithdrawRequest;
 import org.gel.transactionsystem.service.TransactionService;
 import org.gel.transactionsystem.service.UserService;
@@ -37,6 +38,16 @@ public class TransactionController {
     @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
     public Transaction withdraw(@RequestBody WithdrawRequest request) {
         return transactionService.withdraw(request.getId(), request.getAmount(), request.getTransactionId());
+    }
+
+    @RequestMapping(value = "/credit", method = RequestMethod.POST)
+    public Transaction debit(@RequestBody CreditRequest request) {
+        return transactionService.credit(request.getId(), request.getAmount(), request.getTransactionId());
+    }
+
+    @RequestMapping(value = "/history/{userId}", method = RequestMethod.GET)
+    public List<Transaction> getAllTransactions(@PathVariable Long userId) {
+        return transactionService.getAllTransactionForUser(userId);
     }
 
 

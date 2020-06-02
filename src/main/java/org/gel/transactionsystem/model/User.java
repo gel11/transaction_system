@@ -1,9 +1,10 @@
 package org.gel.transactionsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,11 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity(name = "users")
-@ToString(of = {"id", "balance", "name"})
+@ToString(of = {"id", "name"})
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
@@ -25,7 +26,16 @@ public class User {
     @Getter
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
     @Builder.Default
-    private List<Transaction> transactions = Collections.emptyList();
+    @JsonIgnore
+    private List<Transaction> transactions = new ArrayList<>();
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        transaction.setUser(this);
+    }
 }

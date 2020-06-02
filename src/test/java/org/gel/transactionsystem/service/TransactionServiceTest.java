@@ -41,6 +41,29 @@ class TransactionServiceTest {
 
         Assertions.assertThrows(TransactionAlreadyExistsException.class, () -> transactionService.withdraw(1L, 200L, 1L));
 
+        verify(userRepository, never())
+                .save(any(User.class));
+
+        verify(transactionRepository, never())
+                .save(any(Transaction.class));
+
+    }
+
+    @Test
+    void creditWithInvalidTransactionId() {
+        final Transaction transaction = Transaction.builder().transactionId(1L).build();
+
+        given(transactionRepository.existsById(transaction.getTransactionId()))
+                .willReturn(true);
+
+        Assertions.assertThrows(TransactionAlreadyExistsException.class, () -> transactionService.withdraw(1L, 200L, 1L));
+
+        verify(userRepository, never())
+                .save(any(User.class));
+
+        verify(transactionRepository, never())
+                .save(any(Transaction.class));
+
     }
 
     @Test
@@ -76,7 +99,29 @@ class TransactionServiceTest {
 
         transactionService.withdraw(1L, 201L, 1L);
 
-        Assertions.assertEquals(user.getBalance(), 0);
+        Assertions.assertEquals(0, user.getBalance());
+
+        verify(userRepository, times(1))
+                .save(user);
+    }
+
+    @Test
+    void credit() {
+        final Transaction transaction = Transaction.builder().transactionId(1L).build();
+        final User user = User.builder().id(1L).balance(201L).build();
+
+        given(transactionRepository.existsById(transaction.getTransactionId()))
+                .willReturn(false);
+
+        given(userService.findUserOrThrow(user.getId()))
+                .willReturn(user);
+
+        given(userRepository.save(user))
+                .willReturn(user);
+
+        transactionService.credit(1L, 201L, 1L);
+
+        Assertions.assertEquals(402L, user.getBalance());
 
         verify(userRepository, times(1))
                 .save(user);
