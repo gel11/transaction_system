@@ -3,7 +3,7 @@ package org.gel.transactionsystem.controller;
 import org.gel.transactionsystem.model.Transaction;
 import org.gel.transactionsystem.model.User;
 import org.gel.transactionsystem.requests.CreditRequest;
-import org.gel.transactionsystem.requests.WithdrawRequest;
+import org.gel.transactionsystem.requests.DebitRequest;
 import org.gel.transactionsystem.service.TransactionService;
 import org.gel.transactionsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +35,9 @@ public class TransactionController {
         return userService.findUserOrThrow(userId);
     }
 
-    @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
-    public Transaction withdraw(@RequestBody WithdrawRequest request) {
-        return transactionService.withdraw(request.getId(), request.getAmount(), request.getTransactionId());
+    @RequestMapping(value = "/debit", method = RequestMethod.POST)
+    public Transaction debit(@RequestBody DebitRequest request) {
+        return transactionService.debit(request.getId(), request.getAmount(), request.getTransactionId());
     }
 
     @RequestMapping(value = "/credit", method = RequestMethod.POST)

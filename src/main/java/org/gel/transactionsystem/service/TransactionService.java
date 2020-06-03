@@ -29,7 +29,7 @@ public class TransactionService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Transaction withdraw(Long userId, Long amount, Long transactionId) {
+    public Transaction debit(Long userId, Long amount, Long transactionId) {
         boolean exists = transactionRepository.existsById(transactionId);
 
         if (exists)

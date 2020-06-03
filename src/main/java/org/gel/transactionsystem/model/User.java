@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @Entity(name = "users")
 @ToString(of = {"id", "name"})
+@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id

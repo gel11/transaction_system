@@ -13,16 +13,17 @@ import java.time.Instant;
 @Builder
 @Entity(name = "transaction")
 @ToString(of = {"transactionId"})
+@EqualsAndHashCode(of = "transactionId")
 public class Transaction {
 
     @Id
     private Long transactionId;
 
-    private Long createdTimestamp;
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    private Long createdTimestamp;
 
     @PrePersist
     public void prePersist() {
