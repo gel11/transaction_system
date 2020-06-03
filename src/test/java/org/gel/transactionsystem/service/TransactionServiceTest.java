@@ -34,13 +34,13 @@ class TransactionServiceTest {
 
 
     @Test
-    void withdrawWithInvalidTransactionId() {
+    void debitWithInvalidTransactionId() {
         final Transaction transaction = Transaction.builder().transactionId(1L).build();
 
         given(transactionRepository.existsById(transaction.getTransactionId()))
                 .willReturn(true);
 
-        Assertions.assertThrows(TransactionAlreadyExistsException.class, () -> transactionService.withdraw(1L, 200L, 1L));
+        Assertions.assertThrows(TransactionAlreadyExistsException.class, () -> transactionService.debit(1L, 200L, 1L));
 
         verify(userRepository, never())
                 .save(any(User.class));
@@ -57,7 +57,7 @@ class TransactionServiceTest {
         given(transactionRepository.existsById(transaction.getTransactionId()))
                 .willReturn(true);
 
-        Assertions.assertThrows(TransactionAlreadyExistsException.class, () -> transactionService.withdraw(1L, 200L, 1L));
+        Assertions.assertThrows(TransactionAlreadyExistsException.class, () -> transactionService.debit(1L, 200L, 1L));
 
         verify(userRepository, never())
                 .save(any(User.class));
@@ -68,7 +68,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void withdrawWithNotEnoughBalance() {
+    void debitWithNotEnoughBalance() {
         final Transaction transaction = Transaction.builder().transactionId(1L).build();
         final User user = User.builder().id(1L).balance(200L).build();
 
@@ -78,14 +78,14 @@ class TransactionServiceTest {
         given(userService.findUserOrThrow(user.getId()))
                 .willReturn(user);
 
-        Assertions.assertThrows(NotEnoughBalanceException.class, () -> transactionService.withdraw(1L, 201L, 1L));
+        Assertions.assertThrows(NotEnoughBalanceException.class, () -> transactionService.debit(1L, 201L, 1L));
 
         verify(userRepository, never())
                 .save(any(User.class));
     }
 
     @Test
-    void withdraw() {
+    void debit() {
         final Transaction transaction = Transaction.builder().transactionId(1L).build();
         final User user = User.builder().id(1L).balance(201L).build();
 
@@ -101,7 +101,7 @@ class TransactionServiceTest {
         given(transactionRepository.save(any(Transaction.class)))
                 .willAnswer(AdditionalAnswers.returnsFirstArg());
 
-        transactionService.withdraw(1L, 201L, 1L);
+        transactionService.debit(1L, 201L, 1L);
 
         Assertions.assertEquals(0, user.getBalance());
 

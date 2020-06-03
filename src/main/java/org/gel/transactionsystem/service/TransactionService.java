@@ -50,7 +50,7 @@ public class TransactionService {
 
         // We dont have to save here, given we have cascade
         // but we want to trigger prePersist to generate the timestamp
-        // before we return the transaction, the same applies for credit
+        // before we return the transaction
         transaction = transactionRepository.save(transaction);
         user.addTransaction(transaction);
         userRepository.save(user);
@@ -76,6 +76,9 @@ public class TransactionService {
                 .user(user)
                 .build();
 
+        // We dont have to save here, given we have cascade
+        // but we want to trigger prePersist to generate the timestamp
+        // before we return the transaction
         transaction = transactionRepository.save(transaction);
         user.addTransaction(transaction);
         userRepository.save(user);

@@ -43,7 +43,6 @@ class TransactionControllerTest {
                 .build();
     }
 
-
     @Test
     public void testGetAllBalances() throws Exception {
         User user = getPredefinedUser();
@@ -88,7 +87,6 @@ class TransactionControllerTest {
 
         Assertions.assertEquals(response, "Could not find user with id " + user.getId());
     }
-
 
     @Test
     public void testGetAllTransactions() throws Exception {
