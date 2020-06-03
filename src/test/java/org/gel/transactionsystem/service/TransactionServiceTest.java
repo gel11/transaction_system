@@ -9,6 +9,7 @@ import org.gel.transactionsystem.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -97,6 +98,9 @@ class TransactionServiceTest {
         given(userRepository.save(user))
                 .willReturn(user);
 
+        given(transactionRepository.save(any(Transaction.class)))
+                .willAnswer(AdditionalAnswers.returnsFirstArg());
+
         transactionService.withdraw(1L, 201L, 1L);
 
         Assertions.assertEquals(0, user.getBalance());
@@ -118,6 +122,9 @@ class TransactionServiceTest {
 
         given(userRepository.save(user))
                 .willReturn(user);
+
+        given(transactionRepository.save(any(Transaction.class)))
+                .willAnswer(AdditionalAnswers.returnsFirstArg());
 
         transactionService.credit(1L, 201L, 1L);
 
